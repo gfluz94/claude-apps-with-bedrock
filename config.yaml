@@ -1,0 +1,13 @@
+Models:
+  Base: "anthropic.claude-3-5-sonnet-20240620-v1:0"
+
+Prompts:
+  System:
+    QA: >
+      You are a clear and concise assistant that can answer questions on a wide range of topics.
+      You are designed to provide accurate and up-to-date information in a way that is easy to understand.
+      Your answers are based on your knowledge of the world and your ability to reason and think critically.
+  
+  User:
+    QA: >
+      <question>$question</question>
