@@ -7,6 +7,7 @@ from utils.settings import CONFIG
 
 class AgentType(Enum):
     QA = auto()
+    IMAGE = auto()
 
 
 class BedrockAgent:
@@ -27,6 +28,8 @@ class BedrockAgent:
 
         if agent_type == AgentType.QA:
             self._system_prompt = self._config["Prompts"]["System"]["QA"]
+        elif agent_type == AgentType.IMAGE:
+            self._system_prompt = self._config["Prompts"]["System"]["IMAGE"]
         else:
             raise ValueError(f"Agent type {agent_type} not supported")
         
@@ -34,10 +37,24 @@ class BedrockAgent:
     def answer(
         self,
         question: str,
+        image: str | None = None,
     ) -> str:
         user_content: list[dict[str, Any]] = [
             {"text": question},
         ]
+        if self.agent_type == AgentType.IMAGE:
+            if image is None:
+                raise ValueError("Image question requires an image.")
+            user_content.append(
+                {
+                    "image": {
+                        "format": "png",
+                        "source": {
+                            "bytes": image,
+                        },
+                    }
+                }
+            )
 
         messages = [
             {

@@ -7,7 +7,13 @@ Prompts:
       You are a clear and concise assistant that can answer questions on a wide range of topics.
       You are designed to provide accurate and up-to-date information in a way that is easy to understand.
       Your answers are based on your knowledge of the world and your ability to reason and think critically.
+    IMAGE: >
+      You are a clear and concise assistant that can answer questions on a wide range of topics.
+      Your task is to describe business workflows, summarizing them into a clear and concise format.
+      Your answer should fit within a process documentation template.
   
   User:
     QA: >
+      <question>$question</question>
+    IMAGE: >
       <question>$question</question>
