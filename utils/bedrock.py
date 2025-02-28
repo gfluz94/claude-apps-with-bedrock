@@ -7,6 +7,7 @@ from utils.settings import CONFIG
 
 class AgentType(Enum):
     QA = auto()
+    RAG = auto()
     IMAGE = auto()
 
 
@@ -28,6 +29,8 @@ class BedrockAgent:
 
         if agent_type == AgentType.QA:
             self._system_prompt = self._config["Prompts"]["System"]["QA"]
+        elif agent_type == AgentType.RAG:
+            self._system_prompt = self._config["Prompts"]["System"]["RAG"]
         elif agent_type == AgentType.IMAGE:
             self._system_prompt = self._config["Prompts"]["System"]["IMAGE"]
         else:

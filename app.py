@@ -1,10 +1,24 @@
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
+from pathlib import Path
 from PIL import Image
 import io
 
 from utils.bedrock import BedrockAgent, AgentType
+from utils.rag import KnowledgeBase
 from utils.query import build_query
+
+
+DOCS_BASE_PATH = Path("./docs/")
+knowledge_base = KnowledgeBase(
+    collection_name="rag_store",
+)
+
+
+def upload_pdf(file: UploadedFile) -> None:
+    file_path = DOCS_BASE_PATH / file.name
+    with file_path.open("wb") as f:
+        f.write(file.getbuffer())
 
 
 def read_image_bytes(uploaded_image: UploadedFile) -> bytes:
@@ -23,6 +37,17 @@ if __name__ == "__main__":
             type=["png", "jpg", "jpeg"],
             accept_multiple_files=False,
         )
+        st.header("Enrich Knowledge Base by Adding Documents to Vector Store")
+        is_rag = st.checkbox("Enable RAG")
+        if is_rag:
+            uploaded_file = st.file_uploader(
+                "Upload a PDF file",
+                type=["pdf"],
+                accept_multiple_files=False,
+            )
+            if uploaded_file:
+                upload_pdf(uploaded_file)
+                knowledge_base.update(DOCS_BASE_PATH / uploaded_file.name)
         st.header("Clear Chat History")
         if st.button("Clear Chat"):
             st.session_state.messages = []
@@ -32,6 +57,12 @@ if __name__ == "__main__":
     question = st.chat_input(placeholder="Type a message...")
 
     agent_type = AgentType.QA
+
+    if is_rag and question:
+        agent_type = AgentType.RAG
+        context = knowledge_base.retrieve(question)
+        query = build_query(agent_type, question, context)
+
     if uploaded_image and question:
         agent_type = AgentType.IMAGE
         image_bytes = read_image_bytes(uploaded_image)
