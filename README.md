@@ -54,6 +54,18 @@ The project aims to experiment with:
 
 3. Access the application in your browser at http://localhost:8501.
 
+#### RAG Example
+
+In order to leverage current chat capabilities with RAG, the following screenshot illustrates what the process looks like:
+
+![RAG Example](files/rag_example.png)
+
+#### VQA Example
+
+In order to leverage current chat capabilities with image prompts, the following screenshot illustrates what the process looks like:
+
+![VQA Example](files/vqa_example.png)
+
 ____
 
 🚀 Happy Experimenting with Claude 3.5 on AWS Bedrock!
