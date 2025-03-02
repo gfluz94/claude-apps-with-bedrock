@@ -14,7 +14,7 @@ class KnowledgeBase:
     def __init__(
         self,
         collection_name: str,
-        embedding_model_name: str = "amazon.titan-embed-text-v1",
+        embedding_model_name: str = "amazon.titan-embed-text-v2:0",
         chunk_size: int = 1_000,
         chunk_overlap: int = 200,
     ) -> None:
@@ -42,7 +42,7 @@ class KnowledgeBase:
             body=json.dumps({"inputText": text}),
         )
         embedding_output = json.loads(response["body"].read())
-        return embedding_output["embeddings"]
+        return embedding_output["embedding"]
     
     def _load_pdf(self, file_path: Path) -> list[Document]:
         loader = PDFPlumberLoader(file_path)

@@ -16,6 +16,8 @@ knowledge_base = KnowledgeBase(
 
 
 def upload_pdf(file: UploadedFile) -> None:
+    if not DOCS_BASE_PATH.exists():
+        DOCS_BASE_PATH.mkdir()
     file_path = DOCS_BASE_PATH / file.name
     with file_path.open("wb") as f:
         f.write(file.getbuffer())
@@ -57,6 +59,7 @@ if __name__ == "__main__":
     question = st.chat_input(placeholder="Type a message...")
 
     agent_type = AgentType.QA
+    query = build_query(agent_type, question)
 
     if is_rag and question:
         agent_type = AgentType.RAG
@@ -66,8 +69,6 @@ if __name__ == "__main__":
     if uploaded_image and question:
         agent_type = AgentType.IMAGE
         image_bytes = read_image_bytes(uploaded_image)
-    
-    query = build_query(agent_type, question)
     
     agent = BedrockAgent(agent_type=agent_type)
     if "messages" not in st.session_state:
